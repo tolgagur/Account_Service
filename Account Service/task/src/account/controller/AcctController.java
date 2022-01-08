@@ -47,9 +47,8 @@ public class AcctController {
         if (id == null)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"User not found!");
 
-        Payroll payroll2 =payrollRepository.findById(payroll1.getId());
-        payroll2.setSalary(payroll.getSalary());
-        payrollRepository.save(payroll2);
+        payroll1.setSalary(payroll.getSalary());
+        payrollRepository.save(payroll1);
         return Map.of(
                 "status","Updated successfully!"
         );

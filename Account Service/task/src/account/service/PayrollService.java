@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +29,9 @@ public class PayrollService {
         this.userRepository = userRepository;
         this.authenticationService = authenticationService;
     }
+
+
+
 
     public Map<String, String> postAllPayroll(List<Payroll> payrollList){
 
@@ -49,10 +53,11 @@ public class PayrollService {
             if (payroll.getSalary()<0)
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Salary must be non negative!");
 
-            Optional<Payroll> payroll1 = payrollRepository.findByEmployeeAndPeriod(payroll.getEmployee(),payroll.getPeriod());
-            if (payroll1.isEmpty())
+            Optional<Payroll> payroll1 = Optional.ofNullable(payrollRepository.findByEmployeeAndPeriod(payroll.getEmployee(), payroll.getPeriod()));
+            if (payroll1.isEmpty()) {
+                payroll.setUserid(user.getId());
                 payrollRepository.save(payroll);
-            else
+            }else
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Error!");
         }
 
