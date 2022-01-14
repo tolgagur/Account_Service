@@ -30,6 +30,10 @@ public class PayrollService {
         this.authenticationService = authenticationService;
     }
 
+    public void postPayroll(Payroll payroll){
+        payrollRepository.save(payroll);
+
+    }
 
 
 
@@ -49,7 +53,6 @@ public class PayrollService {
             if (regexCheck == false)
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Wrong date!");
 
-            Optional<Payroll> byPeriod= payrollRepository.findByPeriod(payroll.getPeriod());
             if (payroll.getSalary()<0)
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Salary must be non negative!");
 

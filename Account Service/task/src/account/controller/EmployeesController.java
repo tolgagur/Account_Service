@@ -3,8 +3,10 @@ package account.controller;
 import account.dto.PaymentResponse;
 import account.entity.Payroll;
 import account.entity.User;
+import account.exception.InvalidPaymentDataException;
 import account.repo.PayrollRepository;
 import account.service.AuthenticationService;
+import account.service.PayrollService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,19 +19,21 @@ import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static account.service.shared.utils.validation.PeriodValidator.isValidDate;
+
 @RestController
 @RequestMapping("/api")
 public class EmployeesController {
 
-    private final AuthenticationService service;
-    private final PayrollRepository payrollRepository;
+    private  AuthenticationService service;
+    private  PayrollRepository payrollRepository;
+    private PayrollService payrollService;
 
-    public EmployeesController(AuthenticationService service, PayrollRepository payrollRepository) {
+    public EmployeesController(AuthenticationService service, PayrollRepository payrollRepository, PayrollService payrollService) {
         this.service = service;
         this.payrollRepository = payrollRepository;
+        this.payrollService = payrollService;
     }
-
-
 //    @GetMapping("/empl/payment")
 //    public ResponseEntity<UserResponse> getPayment(Principal principal, UserResponse userResponse){
 //        User user = service.findUserByEmail(principal.getName());
@@ -55,31 +59,34 @@ public class EmployeesController {
 
 
         if (period.isPresent()) {
-            Payroll payroll = payrollRepository.findByEmployeeAndPeriod(principal.getName(),period.get());
+            Payroll payroll = payrollRepository.findByEmployeeAndPeriod(principal.getName(), period.get());
             Optional<Payroll> byPeriod = Optional.ofNullable(
                     payrollRepository.findByEmployeeAndPeriod(principal.getName(), period.get()));
 
+            Optional<Payroll> payroll12 = payrollRepository.
+                    findByEmployeeAndPeriodIgnoreCase(principal.getName(), period.get());
 
-            if (payroll.getEmployee().isEmpty())
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not date!");
-//            String date = payroll.getPeriod();
-//            String[] stringsDate = date.split("-");
-//            List<String> map = new ArrayList<>();
-//            int dateNumber = Integer.parseInt(stringsDate[0]);
-//            String[] mount = {"January", "February", "March",
-//                    "April", "May", "June",
-//                    "July", "August", "September",
-//                    "October", "November", "December"};
-//            int payrollNumber = Math.toIntExact(payroll.getSalary());
-//
-//            int dolar = payrollNumber / 100;
-//            int cent = payrollNumber % 100;
-//
-//            Map<String,String> map1 =new HashMap<>();
-//            map1.put("name", user.getName());
-//            map1.put("lastname", user.getLastname());
-//            map1.put("period", mount[dateNumber + 1] + "-" + stringsDate[1]);
-//            map1.put("salary", dolar + " dollar(s) " + cent + " cent(s)");
+            if (!isValidDate(period.get()))
+                throw new InvalidPaymentDataException("period not valid on query string");
+
+            if(byPeriod.isEmpty()){
+               // throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"geçersiz tarih girdiniz!");
+                Payroll payroll1 = new Payroll();
+                payroll1.setUserid(user.getId());
+                payroll1.setEmployee(user.getEmail());
+                payroll1.setPeriod(period.get());
+                payroll1.setSalary(77777L);
+
+                payrollRepository.save(payroll1);
+                return ResponseEntity.ok( new PaymentResponse(
+                                user.getName(),
+                                period.get(),
+                                user.getLastname(),
+                                payroll1.getSalary()
+                        ));
+
+            }
+
 
             return ResponseEntity.ok(byPeriod.stream()
                     .map(payroll1 -> new PaymentResponse(
@@ -90,22 +97,20 @@ public class EmployeesController {
                     )).findFirst());
         }
 
-        //List<Payroll> payrollOptional = payrollRepository.findAllEmployee(principal.getName());
-        List<Payroll> payrollList = payrollRepository.findAll();
-        return ResponseEntity.ok(payrollList.stream()
-                .filter(payment -> payment.getUserid().equals(user.getId()))
-                .map(payment -> new PaymentResponse(
-                        user.getName(),
-                        payment.getPeriod(),
-                        user.getLastname(),
-                        payment.getSalary()
-                )).sorted(Comparator.comparing(PaymentResponse::getPeriodAsYearMonth).reversed())
-                .collect(Collectors.toList()));
-
+            //List<Payroll> payrollOptional = payrollRepository.findAllEmployee(principal.getName());
+            List<Payroll> payrollList = payrollRepository.findAll();
+            return ResponseEntity.ok(payrollList.stream()
+                    .filter(payment -> payment.getUserid().equals(user.getId()))
+                    .map(payment -> new PaymentResponse(
+                            user.getName(),
+                            payment.getPeriod(),
+                            user.getLastname(),
+                            payment.getSalary()
+                    )).sorted(Comparator.comparing(PaymentResponse::getPeriodAsYearMonth).reversed())
+                    .collect(Collectors.toList()));
 
 
 
     }
-
 
 }

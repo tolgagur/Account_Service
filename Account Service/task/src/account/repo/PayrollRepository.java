@@ -14,6 +14,7 @@ public interface PayrollRepository extends JpaRepository<Payroll,Long> {
     Optional<Payroll> findByPeriod(String period);
 
     Payroll findByEmployeeAndPeriod(String email,String period);
+    Optional<Payroll> findByEmployeeAndPeriodIgnoreCase(String email,String period);
 
     List<Payroll> findAll();
 
