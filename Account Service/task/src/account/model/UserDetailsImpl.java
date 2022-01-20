@@ -1,36 +1,37 @@
-package account.security;
-
-import account.entity.User;
+package account.model;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-
+import java.util.List;
 
 public class UserDetailsImpl implements UserDetails {
 
-    private final String email;
+    private final String username;
     private final String password;
+    private final List<GrantedAuthority> rolesAndAuthorities;
 
     public UserDetailsImpl(User user) {
-        this.password = user.getPassword();
-        this.email = user.getEmail();
+        username = user.getEmail().toLowerCase();
+        password = user.getPassword();
+        rolesAndAuthorities = new ArrayList<>();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        return rolesAndAuthorities;
     }
 
     @Override
     public String getPassword() {
-        return this.password;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return this.email;
+        return username;
     }
 
     @Override
