@@ -1,0 +1,256 @@
+{
+	"info": {
+		"_postman_id": "2ea3234b-6209-406b-9ea6-d0a4c6d4a387",
+		"name": "AccountServiceApplication",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"name\": \"John\",\n   \"lastname\": \"Doe\",\n   \"email\": \"johndoe@acme.com\",\n   \"password\": \"ai0y9bMvyF6G\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{ASurl}}/api/auth/signup",
+					"host": [
+						"{{ASurl}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/empl/payment",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "johndoe@acme.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "ai0y9bMvyF6G",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{ASurl}}/api/empl/payment",
+					"host": [
+						"{{ASurl}}"
+					],
+					"path": [
+						"api",
+						"empl",
+						"payment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth/changepass",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "bZPGqH7fTJWW",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "johndoea@acme.com",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"new_password\": \"dsa\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{ASurl}}/api/api/auth/changepass",
+					"host": [
+						"{{ASurl}}"
+					],
+					"path": [
+						"api",
+						"api",
+						"auth",
+						"changepass"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "acct/payments",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "johndoe@acme.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "ai0y9bMvyF6G",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n    \"employee\":\"johndoe@acme.com\",\n    \"period\":\"01-2021\",\n    \"salary\":123456\n    },\n{   \"employee\":\"johndoe@acme.com\",\n    \"period\":\"02-2021\",\n    \"salary\":456789\n    },\n    {   \n    \"employee\":\"johndoe@acme.com\",\n    \"period\":\"03-2021\",\n    \"salary\":12\n    },\n    {\n    \"employee\":\"maxmustermann@acme.com\",\n    \"period\":\"01-2021\",\n    \"salary\":54321\n    },\n    {\n    \"employee\":\"maxmustermann@acme.com\",\n    \"period\":\"02-2021\",\n    \"salary\":987654\n    },\n    {\n    \"employee\":\"maxmustermann@acme.com\",\n    \"period\":\"03-2021\",\n    \"salary\":120\n    }\n]\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{ASurl}}/api/acct/payments",
+					"host": [
+						"{{ASurl}}"
+					],
+					"path": [
+						"api",
+						"acct",
+						"payments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"employee\": \"johndoe@acme.com\",\n        \"period\": \"01-2021\",\n        \"salary\": 88777\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{ASurl}}/api/acct/payments",
+					"host": [
+						"{{ASurl}}"
+					],
+					"path": [
+						"api",
+						"acct",
+						"payments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{ASurl}}/api/acct/payments/all",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "maxmustermann@acme.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "ai0y9bMvyF6G",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{ASurl}}/api/acct/payments/all",
+					"host": [
+						"{{ASurl}}"
+					],
+					"path": [
+						"api",
+						"acct",
+						"payments",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{ASurl}}/api/empl/payment/test",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "johndoe@acme.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "PasswordForJunetolga",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{ASurl}}/api/empl/payment/test",
+					"host": [
+						"{{ASurl}}"
+					],
+					"path": [
+						"api",
+						"empl",
+						"payment",
+						"test"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
